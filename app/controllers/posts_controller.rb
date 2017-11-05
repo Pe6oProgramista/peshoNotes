@@ -30,16 +30,16 @@ class PostsController < ApplicationController
       render xml:
       '<?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>' +
       '<url>' +
-      posts_url + post.id.to_s +
+      posts_url + "/" + post.id.to_s +
       '</url>'
     elsif request.content_type =~ /json/
       post = Post.create(body: params[:message])
-      render json: {url: posts_url + post.id.to_s}
+      render json: {url: posts_url + "/" + post.id.to_s}
     elsif request.content_type =~ /form/
       @post = Post.new(post_params)
     
         if @post.save
-          redirect_to posts_url + @post.id.to_s
+          redirect_to posts_url + "/" + @post.id.to_s
           #render "send", locals: { url: "https://pesho-notes.herokuapp.com/notes/api/" + @post.id.to_s}
           #format.html { render "send", locals: { url: "https://pesho-notes.herokuapp.com/notes/api/" + @post.id.to_s } } #"https://pesho-notes.herokuapp.com/posts/"
           #format.json { render :show, status: :created, location: @post }
