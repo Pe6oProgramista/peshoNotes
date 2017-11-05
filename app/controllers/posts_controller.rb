@@ -26,17 +26,17 @@ class PostsController < ApplicationController
   def create
     if request.content_type =~ /xml/
       params[:message] = Hash.from_xml(request.body.read)["message"]
-      post = Post.create(content: params[:message])
+      post = Post.create(body: params[:message])
       render xml:
       '<?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>' +
       '<url>' +
       posts_url + post.id.to_s +
       '</url>'
     elsif request.content_type =~ /json/
-      post = Post.create(content: params[:message])
+      post = Post.create(body: params[:message])
       render json: {url: posts_url + post.id.to_s}
     elsif request.content_type =~ /form/
-      @post = Post.new({content: params[:content]})
+      @post = Post.new({body: params[:content]})
     
         if @post.save
           redirect_to posts_url + @post.id.to_s
