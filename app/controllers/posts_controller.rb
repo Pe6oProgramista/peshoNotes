@@ -10,6 +10,12 @@ class PostsController < ApplicationController
   # GET /posts/1
   # GET /posts/1.json
   def show
+    @post = Post.find_by id: params[:id]
+    if @post.nil?
+      render "post_gone"
+    else
+      @post.destroy
+end
   end
 
   # GET /posts/new
@@ -39,8 +45,8 @@ class PostsController < ApplicationController
       @post = Post.new(post_params)
     
         if @post.save
-          redirect_to posts_url + "/" + @post.id.to_s
-          #render "send", locals: { url: "https://pesho-notes.herokuapp.com/notes/api/" + @post.id.to_s}
+          #redirect_to posts_url + "/" + @post.id.to_s
+          render "send", locals: { url: posts_url + "/" + @post.id.to_s}
           #format.html { render "send", locals: { url: "https://pesho-notes.herokuapp.com/notes/api/" + @post.id.to_s } } #"https://pesho-notes.herokuapp.com/posts/"
           #format.json { render :show, status: :created, location: @post }
         else
@@ -83,10 +89,10 @@ class PostsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def post_params
-      params.require(:post).permit(:body, :content, :message)
+      params.require(:post).permit(:body)
     end
 
     def post_api_params
-      params.permit(:content)
+      params.permit(:body)
   end
 end
