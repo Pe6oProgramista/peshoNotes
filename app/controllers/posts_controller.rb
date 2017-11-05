@@ -28,7 +28,7 @@ class PostsController < ApplicationController
 
     respond_to do |format|
       if @post.save
-        format.html { render "send", locals: { url: "https://pesho-notes.herokuapp.com/posts/" + @post.id.to_s } }
+        format.html { render "send", locals: { url: "https://pesho-notes.herokuapp.com/notes/api/" + @post.id.to_s } } #"https://pesho-notes.herokuapp.com/posts/"
         format.json { render :show, status: :created, location: @post }
       else
         format.html { render :new }
