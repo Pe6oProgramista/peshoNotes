@@ -36,7 +36,7 @@ class PostsController < ApplicationController
       post = Post.create(body: params[:message])
       render json: {url: posts_url + post.id.to_s}
     elsif request.content_type =~ /form/
-      @post = Post.new({body: params[:content]})
+      @post = Post.new(post_params)
     
         if @post.save
           redirect_to posts_url + @post.id.to_s
