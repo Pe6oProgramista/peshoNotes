@@ -36,7 +36,7 @@ class PostsController < ApplicationController
       post = Post.create(content: params[:message])
       render json: {url: "https://pesho-notes.herokuapp.com/messages/api/" + post.id.to_s}
     elsif request.content_type =~ /form/
-      @post = Post.new({content: params[:content]})
+      @post = Post.new(post_params))
     
         if @post.save
           redirect_to "https://pesho-notes.herokuapp.com/messages/api/" + @post.id.to_s
@@ -83,6 +83,6 @@ class PostsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def post_params
-      params.require(:post).permit(:body)
+      params.require(:post).permit(:body, :content, :message)
     end
 end
