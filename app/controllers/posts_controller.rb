@@ -36,7 +36,7 @@ class PostsController < ApplicationController
       post = Post.create(content: params[:message])
       render json: {url: "https://pesho-notes.herokuapp.com/notes/api/" + post.id.to_s}
     elsif request.content_type =~ /form/
-      @post = Post.new(post_params)
+      @post = Post..new({content: params[:content]})
     
         if @post.save
           render "send", locals: { url: "https://pesho-notes.herokuapp.com/notes/api/" + @post.id.to_s}
