@@ -24,16 +24,29 @@ class PostsController < ApplicationController
   # POST /posts
   # POST /posts.json
   def create
-    @post = Post.new(post_params)
-
-    respond_to do |format|
-      if @post.save
-        format.html { render "send", locals: { url: "https://pesho-notes.herokuapp.com/notes/api/" + @post.id.to_s } } #"https://pesho-notes.herokuapp.com/posts/"
-        format.json { render :show, status: :created, location: @post }
-      else
-        format.html { render :new }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
-      end
+    if request.content_type =~ /xml/
+      params[:message] = Hash.from_xml(request.body.read)["message"]
+      post = Post.create(content: params[:message])
+      render xml:
+      '<?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>' +
+      '<url>' +
+      "https://pesho-notes.herokuapp.com/notes/api/" + post.id.to_s +
+      '</url>'
+    elsif request.content_type =~ /json/
+      post = Post.create(content: params[:message])
+      render json: {url: "https://pesho-notes.herokuapp.com/notes/api/" + post.id.to_s}
+    elsif request.content_type =~ /form/
+      @post = Post.new(post_params)
+    
+        if @post.save
+          render "send", locals: { url: "https://pesho-notes.herokuapp.com/notes/api/" + @post.id.to_s}
+          #format.html { render "send", locals: { url: "https://pesho-notes.herokuapp.com/notes/api/" + @post.id.to_s } } #"https://pesho-notes.herokuapp.com/posts/"
+          #format.json { render :show, status: :created, location: @post }
+        else
+          render :new
+          #format.html { render :new }
+          #format.json { render json: @post.errors, status: :unprocessable_entity }
+        end
     end
   end
 
