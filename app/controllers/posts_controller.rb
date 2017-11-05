@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
+  #before_action :set_post, only: [:show, :edit, :update, :destroy]
 
   # GET /posts
   # GET /posts.json
@@ -30,16 +30,16 @@ class PostsController < ApplicationController
       render xml:
       '<?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>' +
       '<url>' +
-      "https://pesho-notes.herokuapp.com/messages/api/" + post.id.to_s +
+      posts_url + post.id.to_s +
       '</url>'
     elsif request.content_type =~ /json/
       post = Post.create(content: params[:message])
-      render json: {url: "https://pesho-notes.herokuapp.com/messages/api/" + post.id.to_s}
+      render json: {url: posts_url + post.id.to_s}
     elsif request.content_type =~ /form/
-      @post = Post.new(post_params))
+      @post = Post.new({content: params[:content]})
     
         if @post.save
-          redirect_to "https://pesho-notes.herokuapp.com/messages/api/" + @post.id.to_s
+          redirect_to posts_url + @post.id.to_s
           #render "send", locals: { url: "https://pesho-notes.herokuapp.com/notes/api/" + @post.id.to_s}
           #format.html { render "send", locals: { url: "https://pesho-notes.herokuapp.com/notes/api/" + @post.id.to_s } } #"https://pesho-notes.herokuapp.com/posts/"
           #format.json { render :show, status: :created, location: @post }
@@ -85,4 +85,8 @@ class PostsController < ApplicationController
     def post_params
       params.require(:post).permit(:body, :content, :message)
     end
+
+    def post_api_params
+      params.permit(:content)
+  end
 end
